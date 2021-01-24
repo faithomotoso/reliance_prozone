@@ -47,7 +47,7 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
             separatorBuilder: (context, index) => listViewDivider(),
             itemCount: hmoProviders.length,
             physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(top: 12, bottom: 12, ),
+            padding: const EdgeInsets.only(top: 12, bottom: 12,),
             itemBuilder: (context, index) {
               HMOProvider hmoProvider = hmoProviders[index];
               return HMOProviderTile(hmoProvider: hmoProvider);

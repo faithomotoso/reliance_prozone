@@ -14,6 +14,16 @@ class HMOProviderImage {
 
   String get url => _url;
 
+  String get thumbnailUrl {
+    // Return image url for thumbnail, if thumbnail isn't available
+    // return image url for small and so on...
+
+    return _imageFormats?.thumbnailImageFormat?.url ??
+        _imageFormats?.smallImageFormat?.url ??
+        _imageFormats?.mediumImageFormat?.url ??
+        _imageFormats?.largeImageFormat?.url;
+  }
+
   HMOProviderImageFormats get imageFormats => _imageFormats;
 
   HMOProviderImage.fromJson(Map<String, dynamic> json) {

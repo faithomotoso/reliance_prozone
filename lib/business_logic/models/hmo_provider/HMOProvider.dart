@@ -31,6 +31,12 @@ class HMOProvider {
 
   List<HMOProviderImage> get images => _images;
 
+  String get thumbnailImageUrl {
+    // Return the thumbnail url of the first image
+    // Return null if empty
+    return _images.isNotEmpty ? _images.first.thumbnailUrl : null;
+  }
+
   HMOProvider.fromJson(Map<String, dynamic> json) {
     this._id = json["id"].toString();
     this._name = json["name"];

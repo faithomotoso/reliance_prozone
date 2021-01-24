@@ -22,7 +22,7 @@ class TextFieldWHeader extends StatelessWidget {
           header,
           style: Theme.of(context)
               .textTheme
-              .headline5
+              .headline6
               .copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(
