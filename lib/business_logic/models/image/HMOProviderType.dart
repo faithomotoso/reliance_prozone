@@ -6,7 +6,7 @@ class HMOProviderType {
   String get name => _name;
 
   HMOProviderType.fromJson(Map<String, dynamic> json) {
-    this._id = json["id"];
+    this._id = json["id"].toString();
     this._name = json["name"];
   }
 }

@@ -32,7 +32,7 @@ class HMOProvider {
   List<HMOProviderImage> get images => _images;
 
   HMOProvider.fromJson(Map<String, dynamic> json) {
-    this._id = json["id"];
+    this._id = json["id"].toString();
     this._name = json["name"];
     this._description = json["description"];
     this._rating = json["rating"] ?? 0; // Default to 0 if null
@@ -43,7 +43,7 @@ class HMOProvider {
     List imgs = json["images"] ?? [];
     if (imgs.isNotEmpty) {
       _images =
-          List<HMOProviderImage>.from(imgs.map((e) => HMOProvider.fromJson(e)));
+          List<HMOProviderImage>.from(imgs.map((e) => HMOProviderImage.fromJson(e)));
     }
   }
 }
