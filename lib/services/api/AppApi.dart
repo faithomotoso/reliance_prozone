@@ -17,5 +17,11 @@ class AppApi {
     return _dio.get("/providers");
   }
 
+  static Future getAllStates() {
+    return _dio.get("/states");
+  }
 
+  static Future getAllProviderTypes() {
+    return _dio.get("/provider-types");
+  }
 }

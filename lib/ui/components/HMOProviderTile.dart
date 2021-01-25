@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
-import 'package:reliance_hmo_test/ui/components/Ratings.dart';
 import 'package:reliance_hmo_test/ui/hmo_providers/add_edit_hmo_provider.dart';
 import 'package:reliance_hmo_test/utils/utils.dart';
+
+import '../EditableRating.dart';
 
 class HMOProviderTile extends StatelessWidget {
   final HMOProvider hmoProvider;
@@ -24,6 +25,9 @@ class HMOProviderTile extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyText1,
       ),
       subtitle: subtitle(),
+      trailing: Text(
+        hmoProvider.activeStatus.activeStatus
+      ),
     );
   }
 
@@ -34,6 +38,7 @@ class HMOProviderTile extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: hmoProvider.thumbnailImageUrl,
               width: 60,
+              height: double.infinity,
               fit: BoxFit.fill,
               progressIndicatorBuilder: (context, _, progress) {
                 return Center(
@@ -64,7 +69,7 @@ class HMOProviderTile extends StatelessWidget {
         Text(
           hmoProvider.description ?? "",
         ),
-        Ratings(rating: hmoProvider.rating)
+        EditableRating(rating: hmoProvider.rating, )
       ],
     );
   }

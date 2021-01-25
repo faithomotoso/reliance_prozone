@@ -1,4 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:reliance_hmo_test/utils/utils.dart';
+
+InputDecoration textFieldDecoration(String hint) {
+  return InputDecoration(
+      fillColor: Colors.grey.withOpacity(0.3),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      hintText: hint,
+      border: OutlineInputBorder(
+        borderRadius: textFieldBorderRadius,
+      ));
+}
 
 class TextFieldWHeader extends StatelessWidget {
   String header;
@@ -32,16 +43,9 @@ class TextFieldWHeader extends StatelessWidget {
           controller: textEditingController,
           validator: validator,
           maxLines: multiLine ? 2 : 1,
-          decoration: InputDecoration(
-              fillColor: Colors.grey.withOpacity(0.3),
-              hintText: header,
-              border: OutlineInputBorder(
-                borderRadius: textFieldBorderRadius,
-              )),
+          decoration: textFieldDecoration(header),
         )
       ],
     );
   }
-
-  BorderRadius get textFieldBorderRadius => BorderRadius.circular(10);
 }

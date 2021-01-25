@@ -1,3 +1,4 @@
+import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderImage.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
 import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
@@ -8,7 +9,7 @@ class HMOProvider {
   String _description;
   int _rating;
   String _address;
-  String _activeStatus; // Active or Pending.
+  ActiveStatus _activeStatus; // Active or Pending.
   HMOProviderType _providerType;
   NState _state;
   List<HMOProviderImage> _images = [];
@@ -23,7 +24,7 @@ class HMOProvider {
 
   String get address => _address;
 
-  String get activeStatus => _activeStatus;
+  ActiveStatus get activeStatus => _activeStatus;
 
   HMOProviderType get providerType => _providerType;
 
@@ -43,7 +44,7 @@ class HMOProvider {
     this._description = json["description"];
     this._rating = json["rating"] ?? 0; // Default to 0 if null
     this._address = json["address"];
-    this._activeStatus = json["active_status"];
+    this._activeStatus = ActiveStatus(json["active_status"]);
     this._providerType = HMOProviderType.fromJson(json["provider_type"]);
     this._state = NState.fromJson(json["state"]);
     List imgs = json["images"] ?? [];

@@ -50,7 +50,6 @@ class _AppFutureBuilderState extends State<AppFutureBuilder> {
           Text(
             "An error occurred. Tap to reload"
           ),
-          const SizedBox(height: 10,),
           IconButton(
             onPressed: widget.onReload?.call,
             icon: Icon(CupertinoIcons.refresh, color: Colors.black,),
