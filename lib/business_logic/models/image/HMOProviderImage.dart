@@ -12,6 +12,7 @@ class HMOProviderImage {
 
   String get name => _name;
 
+  // todo remove unused url
   String get url => _url;
 
   String get thumbnailUrl {
@@ -22,6 +23,14 @@ class HMOProviderImage {
         _imageFormats?.smallImageFormat?.url ??
         _imageFormats?.mediumImageFormat?.url ??
         _imageFormats?.largeImageFormat?.url;
+  }
+
+  String get mediumImageUrl {
+    // Returns the url for medium, lower quality, smaller data usage
+    // If medium is unavailable, return large or small
+    return _imageFormats?.mediumImageFormat?.url ??
+        _imageFormats?.largeImageFormat?.url ??
+        _imageFormats?.smallImageFormat?.url;
   }
 
   HMOProviderImageFormats get imageFormats => _imageFormats;
