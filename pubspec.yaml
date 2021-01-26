@@ -33,6 +33,7 @@ dependencies:
   cached_network_image: ^2.4.1
   flutter_keyboard_visibility: ^3.2.1
   photo_view: ^0.10.3
+  multi_image_picker: ^4.7.14
 
 dev_dependencies:
   flutter_test:

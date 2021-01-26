@@ -13,7 +13,7 @@ import 'package:reliance_hmo_test/ui/components/AppFutureBuilder.dart';
 import 'package:reliance_hmo_test/ui/components/HMOProviderTypeWidget.dart';
 import 'package:reliance_hmo_test/ui/components/StatesWidget.dart';
 import 'package:reliance_hmo_test/ui/components/TextFieldHeader.dart';
-import 'package:reliance_hmo_test/ui/components/image_view/ImagePreview.dart';
+import 'package:reliance_hmo_test/ui/components/image_view/ProviderImagesPreview.dart';
 
 class AddEditHMOProvider extends StatefulWidget {
   final HMOProvider hmoProvider;
@@ -156,7 +156,8 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
                   },
                 ),
                 listVerticalSpace,
-                imageWidget(),
+                // imageWidget(),
+                ProviderImagesPreview(providerImages: hmoProvider?.images),
                 listVerticalSpace,
                 TextFieldWHeader(
                   header: "Address",
@@ -280,7 +281,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
         SizedBox(
           height: 5,
         ),
-        ImagePreview(providerImages: widget.hmoProvider.images)
+        ProviderImagesPreview(providerImages: widget.hmoProvider.images)
       ],
     );
   }

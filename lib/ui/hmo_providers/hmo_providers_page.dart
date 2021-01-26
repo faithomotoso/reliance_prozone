@@ -119,4 +119,11 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
       appViewModel.loadOnPop = false;
     }
   }
+
+  Widget noProvidersWidget() {
+    return Center(
+      child: Text("No Providers\nCreate a Provider",
+      textAlign: TextAlign.center,),
+    );
+  }
 }
