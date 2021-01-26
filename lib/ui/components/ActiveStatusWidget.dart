@@ -7,13 +7,14 @@ class ActiveStatusWidget extends StatefulWidget {
   Function onStatusSelected;
 
   ActiveStatusWidget(
-      {@required this.activeStatus, @required this.onStatusSelected});
+      {@required this.activeStatus, @required this.onStatusSelected, Key key})
+      : super(key: key);
 
   @override
-  _ActiveStatusWidgetState createState() => _ActiveStatusWidgetState();
+  ActiveStatusWidgetState createState() => ActiveStatusWidgetState();
 }
 
-class _ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
+class ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
   ActiveStatus selectedStatus;
 
   @override
@@ -21,16 +22,6 @@ class _ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
     super.initState();
 
     selectedStatus = widget.activeStatus;
-  }
-
-  @override
-  void didUpdateWidget(ActiveStatusWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      setState(() {
-        selectedStatus = widget.activeStatus;
-      });
-    }
   }
 
   @override
@@ -45,8 +36,11 @@ class _ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
     return ListTile(
       onTap: () {
         widget.onStatusSelected?.call(status);
-        // close the bottom sheet
         Navigator.pop(context);
+        setState(() {
+          selectedStatus = status;
+        });
+        validate();
       },
       title: Text(
         status.activeStatus,
@@ -65,12 +59,18 @@ class _ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
   }
 
   @override
-  String get selectedValue =>
-      allList.firstWhere((element) => element.activeStatus
-          .toString()
-          .toLowerCase()
-          .contains(selectedStatus.activeStatus.toLowerCase())).activeStatus;
+  String get selectedValue {
+    return allList
+        .firstWhere(
+            (element) => element.activeStatus.toString().toLowerCase().contains(
+                selectedStatus?.activeStatus.toString().toLowerCase()),
+            orElse: () => null)
+        ?.activeStatus;
+  }
 
   @override
   String get textWhenNull => "Select Status";
+
+  @override
+  String get validatorMessage => "Please select a status";
 }

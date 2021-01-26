@@ -8,17 +8,14 @@ import '../EditableRating.dart';
 
 class HMOProviderTile extends StatelessWidget {
   final HMOProvider hmoProvider;
+  final VoidCallback onTap;
 
-  HMOProviderTile({@required this.hmoProvider});
+  HMOProviderTile({@required this.hmoProvider, @required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        navigate(
-            context: context,
-            newPage: AddEditHMOProvider(hmoProvider: hmoProvider));
-      },
+      onTap: onTap,
       leading: providerImage(),
       title: Text(
         hmoProvider.name,
@@ -69,7 +66,7 @@ class HMOProviderTile extends StatelessWidget {
         Text(
           hmoProvider.description ?? "",
         ),
-        EditableRating(rating: hmoProvider.rating, )
+        EditableRating(rating: hmoProvider.rating, starSize: 18,)
       ],
     );
   }

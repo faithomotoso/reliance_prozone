@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:reliance_hmo_test/utils/utils.dart';
 
-InputDecoration textFieldDecoration(String hint) {
+InputDecoration textFieldDecoration(String hint, {EdgeInsets contentPadding}) {
   return InputDecoration(
       fillColor: Colors.grey.withOpacity(0.3),
-      contentPadding: EdgeInsets.symmetric(horizontal: 10),
+      contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 10),
       hintText: hint,
       border: OutlineInputBorder(
-        borderRadius: textFieldBorderRadius,
+        borderRadius: appBorderRadius,
       ));
 }
 
@@ -16,12 +16,16 @@ class TextFieldWHeader extends StatelessWidget {
   TextEditingController textEditingController;
   Function validator;
   bool multiLine;
+  TextCapitalization textCapitalization;
+  EdgeInsets contentPadding;
 
   TextFieldWHeader(
       {@required this.header,
       @required this.textEditingController,
       this.validator,
-      this.multiLine = false});
+      this.multiLine = false,
+      this.textCapitalization = TextCapitalization.sentences,
+      this.contentPadding});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +47,8 @@ class TextFieldWHeader extends StatelessWidget {
           controller: textEditingController,
           validator: validator,
           maxLines: multiLine ? 2 : 1,
-          decoration: textFieldDecoration(header),
+          decoration: textFieldDecoration(header, contentPadding: contentPadding),
+          textCapitalization: textCapitalization,
         )
       ],
     );

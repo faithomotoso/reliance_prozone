@@ -8,7 +8,9 @@ import 'package:reliance_hmo_test/business_logic/view_models/AppViewModel.dart';
 import 'package:reliance_hmo_test/ui/EditableRating.dart';
 import 'package:reliance_hmo_test/ui/components/ActiveStatusWidget.dart';
 import 'package:reliance_hmo_test/ui/components/AppBar.dart';
+import 'package:reliance_hmo_test/ui/components/AppButton.dart';
 import 'package:reliance_hmo_test/ui/components/AppFutureBuilder.dart';
+import 'package:reliance_hmo_test/ui/components/HMOProviderTypeWidget.dart';
 import 'package:reliance_hmo_test/ui/components/StatesWidget.dart';
 import 'package:reliance_hmo_test/ui/components/TextFieldHeader.dart';
 import 'package:reliance_hmo_test/ui/components/image_view/ImagePreview.dart';
@@ -16,20 +18,29 @@ import 'package:reliance_hmo_test/ui/components/image_view/ImagePreview.dart';
 class AddEditHMOProvider extends StatefulWidget {
   final HMOProvider hmoProvider;
 
-  AddEditHMOProvider({@required this.hmoProvider});
+  AddEditHMOProvider({this.hmoProvider});
 
   @override
   _AddEditHMOProviderState createState() => _AddEditHMOProviderState();
 }
 
 class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
+  AppViewModel appViewModel;
   HMOProvider hmoProvider;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   ActiveStatus selectedActiveStatus;
-  num selectedRating;
+  num selectedRating = 0;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  GlobalKey<StatesWidgetState> statesKey = GlobalKey<StatesWidgetState>();
+  GlobalKey<ActiveStatusWidgetState> activeStatusKey =
+      GlobalKey<ActiveStatusWidgetState>();
+  GlobalKey<EditableRatingState> editableRatingKey =
+      GlobalKey<EditableRatingState>();
+  GlobalKey<HMOProviderTypeWidgetState> providerTypeKey =
+      GlobalKey<HMOProviderTypeWidgetState>();
 
   Future statesFuture;
   List<NState> states;
@@ -45,8 +56,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
     statesFuture = Provider.of<AppViewModel>(context, listen: false)
         .getAllStates()
         .then((value) {
-      if (value is List)
-        states = value;
+      if (value is List) states = value;
 
       return value;
     });
@@ -56,8 +66,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
     providersFuture = Provider.of<AppViewModel>(context, listen: false)
         .getAllProviderTypes()
         .then((value) {
-      if (value is List)
-        providerTypes = value;
+      if (value is List) providerTypes = value;
       return value;
     });
   }
@@ -93,11 +102,26 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (appViewModel == null) appViewModel = Provider.of<AppViewModel>(context);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.white,
       appBar:
-      appBar(title: hmoProvider != null ? "Edit Provider" : "Add Provider"),
+          appBar(title: hmoProvider != null ? "Edit Provider" : "Add Provider"),
       body: AppFutureBuilder(
         future: futureWait,
         onReload: () {
@@ -112,21 +136,43 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
               padding: const EdgeInsets.all(10),
               children: [
                 TextFieldWHeader(
-                    header: "Name", textEditingController: nameController),
+                  header: "Name",
+                  textEditingController: nameController,
+                  textCapitalization: TextCapitalization.words,
+                  validator: (String value) {
+                    if (value.isEmpty) return "Please enter a name";
+                    return null;
+                  },
+                ),
                 listVerticalSpace,
                 TextFieldWHeader(
-                    header: "Description",
-                    textEditingController: descriptionController),
+                  header: "Description",
+                  textEditingController: descriptionController,
+                  multiLine: true,
+                  contentPadding: EdgeInsets.all(10),
+                  validator: (String value) {
+                    if (value.isEmpty) return "Please enter a description";
+                    return null;
+                  },
+                ),
                 listVerticalSpace,
                 imageWidget(),
                 listVerticalSpace,
                 TextFieldWHeader(
-                    header: "Address",
-                    textEditingController: addressController),
+                  header: "Address",
+                  textEditingController: addressController,
+                  multiLine: true,
+                  contentPadding: EdgeInsets.all(10),
+                  validator: (String value) {
+                    if (value.isEmpty) return "Please enter an address";
+                    return null;
+                  },
+                ),
                 listVerticalSpace,
-                ratings(),
+                ratingWidget(),
                 listVerticalSpace,
                 ActiveStatusWidget(
+                    key: activeStatusKey,
                     activeStatus: selectedActiveStatus,
                     onStatusSelected: (status) {
                       setState(() {
@@ -135,6 +181,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
                     }),
                 listVerticalSpace,
                 StatesWidget(
+                  key: statesKey,
                   selectedState: selectedState,
                   onStateSelected: (state) {
                     setState(() {
@@ -142,7 +189,38 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
                     });
                   },
                   states: states,
-                )
+                ),
+                listVerticalSpace,
+                HMOProviderTypeWidget(
+                    key: providerTypeKey,
+                    selectedHmoProviderType: selectedProviderType,
+                    onProviderTypeSelected: (type) {
+                      setState(() {
+                        selectedProviderType = type;
+                      });
+                    },
+                    providerTypes: providerTypes),
+                SizedBox(
+                  height: 20,
+                ),
+                AppButton(
+                    buttonText: "Save",
+                    onPressed: () {
+                      if (fieldsValidated()) {
+                        appViewModel.saveProvider(
+                            context: context,
+                            scaffoldKey: scaffoldKey,
+                            hmoProvider: hmoProvider,
+                            providerName: nameController.text,
+                            providerAddress: addressController.text,
+                            providerDescription: descriptionController.text,
+                            rating: selectedRating,
+                            selectedState: selectedState,
+                            selectedActiveStatus: selectedActiveStatus,
+                            selectedProviderType: selectedProviderType);
+                      }
+                    },
+                    context: context)
               ],
             ),
           );
@@ -151,20 +229,18 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
     );
   }
 
-  SizedBox get listVerticalSpace =>
-      SizedBox(
+  SizedBox get listVerticalSpace => SizedBox(
         height: 14,
       );
 
-  Widget ratings() {
+  Widget ratingWidget() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Rating",
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .headline6
               .copyWith(fontWeight: FontWeight.bold),
@@ -174,6 +250,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
         ),
         // Rating(rating: hmoProvider.rating,)
         EditableRating(
+          key: editableRatingKey,
           rating: selectedRating,
           canEdit: true,
           onRatingSelected: (rating) {
@@ -195,11 +272,27 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
       children: [
         Text(
           "Images",
-          style: Theme.of(context).textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .headline6
+              .copyWith(fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 5,),
+        SizedBox(
+          height: 5,
+        ),
         ImagePreview(providerImages: widget.hmoProvider.images)
       ],
     );
+  }
+
+  bool fieldsValidated() {
+    // Doing it this way because chaining validations don't work.
+    bool isValid = true;
+    isValid &= statesKey.currentState.validate();
+    isValid &= activeStatusKey.currentState.validate();
+    isValid &= editableRatingKey.currentState.validateRating();
+    isValid &= providerTypeKey.currentState.validate();
+    isValid &= formKey.currentState.validate();
+    return isValid;
   }
 }

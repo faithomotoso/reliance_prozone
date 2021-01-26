@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:reliance_hmo_test/ui/components/TextFieldHeader.dart';
@@ -7,6 +8,7 @@ import 'package:reliance_hmo_test/utils/utils.dart';
 abstract class SearchableList<T extends StatefulWidget> extends State<T> {
   final TextEditingController searchController = TextEditingController();
   ValueNotifier<bool> keyboardVisible = ValueNotifier<bool>(false);
+  ValueNotifier<bool> isValid = ValueNotifier<bool>(true);
 
   List get allList;
 
@@ -31,6 +33,9 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
 
   /// Hint to display
   String get textWhenNull;
+
+  /// String to show when validation is false
+  String get validatorMessage;
 
   Widget header() {
     return Text(
@@ -59,29 +64,45 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
   }
 
   Widget dropDownButton() {
-    return InkWell(
-      onTap: () {
-        _showSearchableList?.call();
+    return ValueListenableBuilder(
+      valueListenable: isValid,
+      builder: (context, isValid, child) {
+        return InkWell(
+          onTap: () {
+            removeKeyboard(context);
+            _showSearchableList?.call();
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                    borderRadius: appBorderRadius,
+                    color: Colors.grey.withOpacity(0.1),
+                    border: Border.all(
+                        color: !isValid
+                            ? Theme.of(context).errorColor
+                            : Colors.transparent)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      selectedValue ?? textWhenNull,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black,
+                    )
+                  ],
+                ),
+              ),
+              if (!isValid) _validatorWidget()
+            ],
+          ),
+        );
       },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.grey.withOpacity(0.1)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              selectedValue ?? textWhenNull,
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            Icon(
-              Icons.arrow_drop_down,
-              color: Colors.black,
-            )
-          ],
-        ),
-      ),
     );
   }
 
@@ -109,10 +130,23 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
         });
   }
 
+  Widget _validatorWidget() {
+    return Text(
+      validatorMessage ?? "",
+      style: Theme.of(context)
+          .textTheme
+          .bodyText2
+          .copyWith(color: Theme.of(context).errorColor, fontSize: 12),
+    );
+  }
+
   Widget _body() {
     return Column(
       children: [
-        SearchBar(searchController: searchController, onChanged: search,),
+        SearchBar(
+          searchController: searchController,
+          onChanged: search,
+        ),
         Expanded(
           child: ValueListenableBuilder(
             valueListenable: searchList,
@@ -146,6 +180,13 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
 
   // widget to display in the list
   Widget itemWidgetToDisplay(var item);
+
+  bool validate() {
+    // removeKeyboard(context);
+    isValid.value = selectedValue != null;
+
+    return selectedValue != null;
+  }
 }
 
 class SearchBar extends StatelessWidget {

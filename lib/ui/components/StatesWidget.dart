@@ -7,31 +7,24 @@ class StatesWidget extends StatefulWidget {
   Function onStateSelected;
   List<NState> states;
 
-  StatesWidget({@required this.selectedState, @required this.onStateSelected,
-  @required this.states});
+  StatesWidget(
+      {@required this.selectedState,
+      @required this.onStateSelected,
+      @required this.states,
+      Key key})
+      : super(key: key);
 
   @override
-  _StatesWidgetState createState() => _StatesWidgetState();
+  StatesWidgetState createState() => StatesWidgetState();
 }
 
-class _StatesWidgetState extends SearchableList<StatesWidget> {
+class StatesWidgetState extends SearchableList<StatesWidget> {
   NState selectedState;
 
   @override
   void initState() {
     super.initState();
     selectedState = widget.selectedState;
-  }
-
-
-  @override
-  void didUpdateWidget(StatesWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget != widget) {
-      setState(() {
-        selectedState = widget.selectedState;
-      });
-    }
   }
 
   @override
@@ -46,7 +39,11 @@ class _StatesWidgetState extends SearchableList<StatesWidget> {
     return ListTile(
       onTap: () {
         widget.onStateSelected?.call(state);
+        setState(() {
+          selectedState = state;
+        });
         Navigator.pop(context);
+        validate();
       },
       title: Text(state.name),
     );
@@ -55,16 +52,23 @@ class _StatesWidgetState extends SearchableList<StatesWidget> {
   @override
   List searchFunction(String query) {
     List<NState> allStates = allList;
-    return allStates.where(
-        (element) => element.name.toLowerCase().contains(query.toLowerCase())).toList();
+    return allStates
+        .where((element) =>
+            element.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 
   @override
   String get selectedValue {
     List<NState> allStates = allList;
-    return allStates.firstWhere((element) => element.id == selectedState.id, orElse: null).name;
+    return allStates
+            .firstWhere((element) => element.id == selectedState?.id,
+                orElse: () => null)?.name;
   }
 
   @override
   String get textWhenNull => "Select State";
+
+  @override
+  String get validatorMessage => "Please select a state";
 }
