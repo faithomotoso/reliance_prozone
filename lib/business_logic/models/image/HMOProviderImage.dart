@@ -30,7 +30,7 @@ class HMOProviderImage {
     // If medium is unavailable, return large or small
     return _imageFormats?.mediumImageFormat?.url ??
         _imageFormats?.largeImageFormat?.url ??
-        _imageFormats?.smallImageFormat?.url;
+        _imageFormats?.smallImageFormat?.url ?? _url;
   }
 
   HMOProviderImageFormats get imageFormats => _imageFormats;

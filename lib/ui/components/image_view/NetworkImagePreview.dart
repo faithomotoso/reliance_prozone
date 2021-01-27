@@ -28,6 +28,7 @@ class _NetworkImagePreviewState extends State<NetworkImagePreview> {
   Widget cachedNetworkImage() {
     return CachedNetworkImage(
         imageUrl: widget.image.mediumImageUrl,
+        fit: BoxFit.cover,
         progressIndicatorBuilder: (context, _, progress) {
           return Center(
             child: CircularProgressIndicator(

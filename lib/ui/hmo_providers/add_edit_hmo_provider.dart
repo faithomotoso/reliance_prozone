@@ -104,7 +104,13 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (appViewModel == null) appViewModel = Provider.of<AppViewModel>(context);
+    appViewModel = Provider.of<AppViewModel>(context);
+    setState(() {
+      hmoProvider = appViewModel.allProviders.firstWhere(
+          (element) => element.id == hmoProvider?.id,
+          orElse: () => hmoProvider);
+      print("Set state called");
+    });
   }
 
   @override
@@ -157,7 +163,9 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
                 ),
                 listVerticalSpace,
                 // imageWidget(),
-                ProviderImagesPreview(providerImages: hmoProvider?.images),
+                ProviderImagesPreview(
+                  hmoProvider: hmoProvider,
+                ),
                 listVerticalSpace,
                 TextFieldWHeader(
                   header: "Address",
@@ -281,7 +289,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
         SizedBox(
           height: 5,
         ),
-        ProviderImagesPreview(providerImages: widget.hmoProvider.images)
+        ProviderImagesPreview(hmoProvider: widget.hmoProvider)
       ],
     );
   }

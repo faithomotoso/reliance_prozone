@@ -56,19 +56,19 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
           });
         },
         onData: (data) {
-          List<HMOProvider> hmoProviders = data;
+          // List<HMOProvider> hmoProviders = data;
 
-          return hmoProviders.isNotEmpty
+          return appViewModel.allProviders.isNotEmpty
               ? ListView.separated(
                   separatorBuilder: (context, index) => listViewDivider(),
-                  itemCount: hmoProviders.length,
+                  itemCount: appViewModel.allProviders.length,
                   physics: BouncingScrollPhysics(),
                   padding: const EdgeInsets.only(
                     top: 12,
                     bottom: 30,
                   ),
                   itemBuilder: (context, index) {
-                    HMOProvider hmoProvider = hmoProviders[index];
+                    HMOProvider hmoProvider = appViewModel.allProviders[index];
                     return HMOProviderTile(
                       hmoProvider: hmoProvider,
                       onTap: () {

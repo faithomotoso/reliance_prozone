@@ -2,16 +2,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderImage.dart';
 import 'package:reliance_hmo_test/ui/components/image_view/ImagePageIndicator.dart';
 import 'package:reliance_hmo_test/ui/components/image_view/ProviderImagesManager.dart';
 import 'package:reliance_hmo_test/utils/utils.dart';
 
 class ProviderImagesPreview extends StatefulWidget {
-  final List<HMOProviderImage> providerImages;
+  final HMOProvider hmoProvider;
   final bool showPreview;
 
-  ProviderImagesPreview({@required this.providerImages, this.showPreview = true});
+  ProviderImagesPreview({@required this.hmoProvider, this.showPreview = true});
 
   @override
   _ProviderImagesPreviewState createState() => _ProviderImagesPreviewState();
@@ -20,11 +21,19 @@ class ProviderImagesPreview extends StatefulWidget {
 class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
   int page = 0;
   PhotoViewController photoViewController = PhotoViewController();
+  List<HMOProviderImage> providerImages;
+
+
+  @override
+  void initState() {
+    super.initState();
+    providerImages = widget.hmoProvider?.images;
+  }
 
   @override
   Widget build(BuildContext context) {
     // Don't show this widget when creating a provider
-    if (widget.providerImages == null) return SizedBox();
+    if (widget.hmoProvider == null) return SizedBox();
 
     return widget.showPreview ? preview() : fullScreen();
   }
@@ -45,7 +54,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
                   .headline6
                   .copyWith(fontWeight: FontWeight.bold),
             ),
-            if (widget.providerImages.isNotEmpty)
+            if (providerImages.isNotEmpty)
               Center(
                 child: TextButton(
                   child: Text("Edit",
@@ -61,14 +70,14 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
           height: 5,
         ),
         GestureDetector(
-          onTap: widget.providerImages.isEmpty ? navigateToImagesManager : null,
+          onTap: providerImages.isEmpty ? navigateToImagesManager : null,
           child: Container(
             height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
-                color: widget.providerImages.isNotEmpty
+                color: providerImages.isNotEmpty
                     ? Colors.transparent
                     : Colors.grey.withOpacity(0.05)),
-            child: widget.providerImages.isNotEmpty
+            child: providerImages.isNotEmpty
                 ? imageView()
                 : noImagesWidget(),
           ),
@@ -83,7 +92,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
         return Stack(
           children: [
             PhotoViewGallery.builder(
-              itemCount: widget.providerImages.length,
+              itemCount: providerImages.length,
               onPageChanged: (newPage) {
                 setState(() {
                   page = newPage;
@@ -92,7 +101,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
               builder: (context, index) {
                 return PhotoViewGalleryPageOptions(
                   imageProvider: CachedNetworkImageProvider(
-                    widget.providerImages[index].mediumImageUrl,
+                    providerImages[index].mediumImageUrl,
                   ),
                   minScale: 0.5,
                 );
@@ -122,7 +131,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
                   constraints.copyWith(minHeight: 10),
                   child: ImagePageIndicator(
                       page: page,
-                      maxPage: widget.providerImages.length),
+                      maxPage: providerImages.length),
                 ))
           ],
         );
@@ -148,6 +157,6 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
   void navigateToImagesManager() {
     navigate(
         context: context,
-        newPage: ProviderImagesManager(providerImages: widget.providerImages));
+        newPage: ProviderImagesManager(hmoProvider: widget.hmoProvider));
   }
 }

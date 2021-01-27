@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
@@ -77,9 +80,34 @@ class AppApi {
     if (hmoProvider.state.id != selectedState.id)
       data["state"] = selectedState.id;
 
-    if (hmoProvider.rating != rating)
-      data["rating"] = rating;
+    if (hmoProvider.rating != rating) data["rating"] = rating;
 
     return _dio.put("/providers/${hmoProvider.id}", data: data);
+  }
+
+  static Future uploadProviderImages(
+      {@required String providerId, @required List<Asset> images}) async {
+    List<MultipartFile> files = await _getMultipartFiles(images);
+
+    FormData formData = FormData.fromMap({
+      "ref": "provider",
+      "refId": providerId,
+      "field": "images",
+    })..files.addAll(
+      files.map((e) => MapEntry("files", e)).toList()
+    );
+
+    return _dio.post("/upload", data: formData);
+  }
+
+  static Future<List<MultipartFile>> _getMultipartFiles(
+      List<Asset> images) async {
+    List<MultipartFile> files = [];
+    for (Asset asset in images) {
+      ByteData byteData = await asset.getByteData();
+      List<int> imageData = byteData.buffer.asUint8List();
+      files.add(MultipartFile.fromBytes(imageData, filename: asset.name));
+    }
+    return files;
   }
 }

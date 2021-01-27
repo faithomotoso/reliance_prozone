@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
+import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderImage.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
 import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
 import 'package:reliance_hmo_test/services/api/AppApi.dart';
+import 'package:reliance_hmo_test/ui/components/image_view/ProviderImagesManager.dart';
 import 'package:reliance_hmo_test/ui/hmo_providers/hmo_providers_page.dart';
 import 'package:reliance_hmo_test/utils/dialogs.dart';
 import 'package:reliance_hmo_test/utils/snackbar.dart';
@@ -13,14 +16,16 @@ import 'package:reliance_hmo_test/utils/utils.dart';
 
 class AppViewModel extends ChangeNotifier {
   bool loadOnPop = false;
+  List<HMOProvider> allProviders;
 
   Future getAllProviders() async {
     try {
       Response response = await AppApi.getAllProviders();
       List data = response.data;
-      List<HMOProvider> providers =
+      allProviders =
           List<HMOProvider>.from(data.map((e) => HMOProvider.fromJson(e)));
-      return providers;
+      notifyListeners();
+      // return providers;
     } on DioError catch (e) {
       debugDioError(error: e, functionName: "getAllProviders");
       return Future.error(e);
@@ -108,6 +113,48 @@ class AppViewModel extends ChangeNotifier {
       Navigator.pop(context);
       showDioErrorSnackbar(
           scaffoldKey: scaffoldKey, dioError: e, functionName: "saveProvider");
+    }
+  }
+
+  Future uploadProviderImages(
+      {@required HMOProvider hmoProvider,
+      @required List<Asset> images,
+      @required BuildContext context,
+      @required GlobalKey<ScaffoldState> scaffoldKey}) async {
+    showLoadingIndicator(context: context);
+
+    try {
+      Response response = await AppApi.uploadProviderImages(
+          providerId: hmoProvider.id, images: images);
+
+      // update the hmoProvider with new images
+      List<HMOProviderImage> newImages = List<HMOProviderImage>.from(
+          response.data.map((e) => HMOProviderImage.fromJson(e)));
+
+      // await Future.delayed(Duration(seconds: 3));
+      allProviders[allProviders
+              .indexWhere((element) => element.id == hmoProvider.id)]
+          .images
+          .addAll(newImages);
+      notifyListeners();
+
+      Navigator.pop(context);
+
+      showOkDialog(
+          context: context,
+          message: "Images uploaded successfully",
+          onOkButtonPressed: () {
+            Navigator.popUntil(
+                context,
+                ModalRoute.withName(
+                    ProviderImagesManager(hmoProvider: hmoProvider)
+                        .runtimeType
+                        .toString()));
+          });
+    } on DioError catch (e) {
+      Navigator.pop(context);
+      showDioErrorSnackbar(
+          scaffoldKey: scaffoldKey, dioError: e, functionName: "uploadImages");
     }
   }
 }

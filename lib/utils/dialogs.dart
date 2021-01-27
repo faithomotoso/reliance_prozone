@@ -88,6 +88,7 @@ void showYesNoDialog({
       buttonColor: Colors.redAccent,
       textColor: Colors.black,
       useOutlineColor: true,
+      outlineColor: Colors.red,
     ),
     SizedBox(width: 12,),
     AppButton(

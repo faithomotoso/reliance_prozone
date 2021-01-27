@@ -23,7 +23,7 @@ class AppButton extends ElevatedButton {
             onPressed: onPressed,
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-              return buttonColor ?? Theme.of(context).primaryColor;
+              return !useOutlineColor ? buttonColor ?? Theme.of(context).primaryColor : Colors.white;
             }),
             side: MaterialStateProperty.resolveWith<BorderSide>((states) {
               return BorderSide(
