@@ -19,6 +19,7 @@ class _DashBoardState extends State<DashBoard> {
     menu = [
       MenuItem(
           name: "HMO Providers",
+          iconPath: "assets/images/teamwork.png",
           onTap: () {
             navigate(context: context, newPage: HMOProvidersPage());
           })

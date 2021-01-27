@@ -132,7 +132,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
           key: scaffoldKey,
           backgroundColor: Colors.white,
           appBar: appBar(
-              title: hmoProvider != null ? "Edit Provider" : "Add Provider",
+              title: hmoProvider != null ? "${editMode ? "Edit" : "View"} Provider" : "Add Provider",
               actions: [
                 if (!editMode)
                   IconButton(
