@@ -11,8 +11,9 @@ import 'package:reliance_hmo_test/utils/utils.dart';
 class ProviderImagesPreview extends StatefulWidget {
   final HMOProvider hmoProvider;
   final bool showPreview;
+  bool editMode; // Determine if the widget would recognise a tap gesture
 
-  ProviderImagesPreview({@required this.hmoProvider, this.showPreview = true});
+  ProviderImagesPreview({@required this.hmoProvider, this.showPreview = true, this.editMode = true});
 
   @override
   _ProviderImagesPreviewState createState() => _ProviderImagesPreviewState();
@@ -55,12 +56,12 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             if (providerImages.isNotEmpty)
-              Center(
+              if (widget.editMode) Center(
                 child: TextButton(
                   child: Text("Edit",
                   style: TextStyle(fontSize: 16),),
                   onPressed: () {
-                    navigateToImagesManager();
+                     navigateToImagesManager();
                   },
                 ),
               )
@@ -70,7 +71,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
           height: 5,
         ),
         GestureDetector(
-          onTap: providerImages.isEmpty ? navigateToImagesManager : null,
+          onTap: providerImages.isEmpty ? widget.editMode ? navigateToImagesManager : null : null,
           child: Container(
             height: MediaQuery.of(context).size.height * 0.5,
             decoration: BoxDecoration(
@@ -149,7 +150,7 @@ class _ProviderImagesPreviewState extends State<ProviderImagesPreview> {
   Widget noImagesWidget() {
     return Center(
       child: Text(
-        "No images\nTap to add",
+        "No images${widget.editMode ? "\nTap to add" : ""}",
       ),
     );
   }

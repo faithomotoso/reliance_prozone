@@ -6,9 +6,14 @@ class ActiveStatusWidget extends StatefulWidget {
   ActiveStatus activeStatus;
   Function onStatusSelected;
   String customHint;
+  bool canEdit;
 
   ActiveStatusWidget(
-      {@required this.activeStatus, @required this.onStatusSelected, this.customHint, Key key})
+      {@required this.activeStatus,
+      @required this.onStatusSelected,
+      this.customHint,
+      this.canEdit = true,
+      Key key})
       : super(key: key);
 
   @override
@@ -24,6 +29,9 @@ class ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
 
     selectedStatus = widget.activeStatus;
   }
+
+  @override
+  bool get canEdit => widget.canEdit;
 
   @override
   List get allList => ActiveStatus.statusOptions;

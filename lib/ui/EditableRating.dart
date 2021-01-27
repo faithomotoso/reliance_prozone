@@ -12,7 +12,11 @@ class EditableRating extends StatefulWidget {
   double starSize;
 
   EditableRating(
-      {this.rating, this.onRatingSelected, this.canEdit = false, this.starSize, Key key})
+      {this.rating,
+      this.onRatingSelected,
+      this.canEdit = false,
+      this.starSize,
+      Key key})
       : super(key: key) {
     assert(rating <= 5, "Rating can't be more than 5");
     // Set rating to 0 if null

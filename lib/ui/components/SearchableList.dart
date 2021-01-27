@@ -15,6 +15,8 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
   // list to be searched, different from allList
   ValueNotifier<List> searchList;
 
+  bool get canEdit => true;
+
   @override
   void initState() {
     super.initState();
@@ -68,10 +70,10 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
       valueListenable: isValid,
       builder: (context, isValid, child) {
         return InkWell(
-          onTap: () {
+          onTap: canEdit ? () {
             removeKeyboard(context);
             _showSearchableList?.call();
-          },
+          } : null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -79,7 +81,7 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                     borderRadius: appBorderRadius,
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withOpacity(canEdit ? 0.1 : 0.06),
                     border: Border.all(
                         color: !isValid
                             ? Theme.of(context).errorColor

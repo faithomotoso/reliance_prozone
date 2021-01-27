@@ -7,11 +7,13 @@ class HMOProviderTypeWidget extends StatefulWidget {
   Function onProviderTypeSelected;
   List<HMOProviderType> providerTypes;
   String customHint;
+  bool canEdit;
 
   HMOProviderTypeWidget({@required this.selectedHmoProviderType,
     @required this.onProviderTypeSelected,
     @required this.providerTypes,
     this.customHint,
+    this.canEdit = true,
     Key key})
       : super(key: key);
 
@@ -37,6 +39,9 @@ class HMOProviderTypeWidgetState
       selectedProviderType = widget.selectedHmoProviderType;
     });
   }
+
+  @override
+  bool get canEdit => widget.canEdit;
 
   @override
   List get allList => widget.providerTypes;

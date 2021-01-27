@@ -18,11 +18,13 @@ class TextFieldWHeader extends StatelessWidget {
   bool multiLine;
   TextCapitalization textCapitalization;
   EdgeInsets contentPadding;
+  bool enabled;
 
   TextFieldWHeader(
       {@required this.header,
       @required this.textEditingController,
       this.validator,
+        this.enabled = true,
       this.multiLine = false,
       this.textCapitalization = TextCapitalization.sentences,
       this.contentPadding});
@@ -49,6 +51,7 @@ class TextFieldWHeader extends StatelessWidget {
           maxLines: multiLine ? 2 : 1,
           decoration: textFieldDecoration(header, contentPadding: contentPadding),
           textCapitalization: textCapitalization,
+          enabled: enabled,
         )
       ],
     );

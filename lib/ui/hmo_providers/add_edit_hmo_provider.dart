@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
@@ -52,6 +53,8 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
 
   Future futureWait;
 
+  ValueNotifier<bool> editMode;
+
   void getStates() {
     statesFuture = Provider.of<AppViewModel>(context, listen: false)
         .getAllStates()
@@ -86,7 +89,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
   @override
   void initState() {
     super.initState();
-    // loadLists();
+    editMode = ValueNotifier<bool>(widget.hmoProvider != null ? false : true);
     assignFutureWait();
 
     if (widget.hmoProvider != null) {
@@ -122,118 +125,139 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar:
-          appBar(title: hmoProvider != null ? "Edit Provider" : "Add Provider"),
-      body: AppFutureBuilder(
-        future: futureWait,
-        onReload: () {
-          setState(() {
-            assignFutureWait();
-          });
-        },
-        onData: (data) {
-          return Form(
-            key: formKey,
-            child: ListView(
-              padding: const EdgeInsets.all(10),
-              children: [
-                TextFieldWHeader(
-                  header: "Name",
-                  textEditingController: nameController,
-                  textCapitalization: TextCapitalization.words,
-                  validator: (String value) {
-                    if (value.isEmpty) return "Please enter a name";
-                    return null;
-                  },
+    return ValueListenableBuilder(
+      valueListenable: editMode,
+      builder: (context, editMode, child) {
+        return Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.white,
+          appBar: appBar(
+              title: hmoProvider != null ? "Edit Provider" : "Add Provider",
+              actions: [
+                if (!editMode)
+                  IconButton(
+                      icon: Icon(Icons.edit_outlined),
+                      tooltip: "Edit",
+                      onPressed: () {
+                        this.editMode.value = !this.editMode.value;
+                      })
+              ]),
+          body: AppFutureBuilder(
+            future: futureWait,
+            onReload: () {
+              setState(() {
+                assignFutureWait();
+              });
+            },
+            onData: (data) {
+              return Form(
+                key: formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(10),
+                  children: [
+                    TextFieldWHeader(
+                      header: "Name",
+                      textEditingController: nameController,
+                      textCapitalization: TextCapitalization.words,
+                      enabled: editMode,
+                      validator: (String value) {
+                        if (value.isEmpty) return "Please enter a name";
+                        return null;
+                      },
+                    ),
+                    listVerticalSpace,
+                    TextFieldWHeader(
+                      header: "Description",
+                      textEditingController: descriptionController,
+                      multiLine: true,
+                      enabled: editMode,
+                      contentPadding: EdgeInsets.all(10),
+                      validator: (String value) {
+                        if (value.isEmpty) return "Please enter a description";
+                        return null;
+                      },
+                    ),
+                    listVerticalSpace,
+                    // imageWidget(),
+                    ProviderImagesPreview(
+                      hmoProvider: hmoProvider,
+                      editMode: editMode,
+                    ),
+                    listVerticalSpace,
+                    TextFieldWHeader(
+                      header: "Address",
+                      textEditingController: addressController,
+                      multiLine: true,
+                      enabled: editMode,
+                      contentPadding: EdgeInsets.all(10),
+                      validator: (String value) {
+                        if (value.isEmpty) return "Please enter an address";
+                        return null;
+                      },
+                    ),
+                    listVerticalSpace,
+                    ratingWidget(editMode),
+                    listVerticalSpace,
+                    ActiveStatusWidget(
+                        key: activeStatusKey,
+                        activeStatus: selectedActiveStatus,
+                        canEdit: editMode,
+                        onStatusSelected: (status) {
+                          setState(() {
+                            selectedActiveStatus = status;
+                          });
+                        }),
+                    listVerticalSpace,
+                    StatesWidget(
+                      key: statesKey,
+                      selectedState: selectedState,
+                      canEdit: editMode,
+                      onStateSelected: (state) {
+                        setState(() {
+                          selectedState = state;
+                        });
+                      },
+                      states: states,
+                    ),
+                    listVerticalSpace,
+                    HMOProviderTypeWidget(
+                        key: providerTypeKey,
+                        selectedHmoProviderType: selectedProviderType,
+                        canEdit: editMode,
+                        onProviderTypeSelected: (type) {
+                          setState(() {
+                            selectedProviderType = type;
+                          });
+                        },
+                        providerTypes: providerTypes),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    if (editMode) AppButton(
+                        buttonText: "Save",
+                        onPressed: () {
+                          if (fieldsValidated()) {
+                            appViewModel.saveProvider(
+                                context: context,
+                                scaffoldKey: scaffoldKey,
+                                hmoProvider: hmoProvider,
+                                providerName: nameController.text,
+                                providerAddress: addressController.text,
+                                providerDescription: descriptionController.text,
+                                rating: selectedRating,
+                                selectedState: selectedState,
+                                selectedActiveStatus: selectedActiveStatus,
+                                selectedProviderType: selectedProviderType);
+                          }
+                        },
+                        context: context)
+                  ],
                 ),
-                listVerticalSpace,
-                TextFieldWHeader(
-                  header: "Description",
-                  textEditingController: descriptionController,
-                  multiLine: true,
-                  contentPadding: EdgeInsets.all(10),
-                  validator: (String value) {
-                    if (value.isEmpty) return "Please enter a description";
-                    return null;
-                  },
-                ),
-                listVerticalSpace,
-                // imageWidget(),
-                ProviderImagesPreview(
-                  hmoProvider: hmoProvider,
-                ),
-                listVerticalSpace,
-                TextFieldWHeader(
-                  header: "Address",
-                  textEditingController: addressController,
-                  multiLine: true,
-                  contentPadding: EdgeInsets.all(10),
-                  validator: (String value) {
-                    if (value.isEmpty) return "Please enter an address";
-                    return null;
-                  },
-                ),
-                listVerticalSpace,
-                ratingWidget(),
-                listVerticalSpace,
-                ActiveStatusWidget(
-                    key: activeStatusKey,
-                    activeStatus: selectedActiveStatus,
-                    onStatusSelected: (status) {
-                      setState(() {
-                        selectedActiveStatus = status;
-                      });
-                    }),
-                listVerticalSpace,
-                StatesWidget(
-                  key: statesKey,
-                  selectedState: selectedState,
-                  onStateSelected: (state) {
-                    setState(() {
-                      selectedState = state;
-                    });
-                  },
-                  states: states,
-                ),
-                listVerticalSpace,
-                HMOProviderTypeWidget(
-                    key: providerTypeKey,
-                    selectedHmoProviderType: selectedProviderType,
-                    onProviderTypeSelected: (type) {
-                      setState(() {
-                        selectedProviderType = type;
-                      });
-                    },
-                    providerTypes: providerTypes),
-                SizedBox(
-                  height: 20,
-                ),
-                AppButton(
-                    buttonText: "Save",
-                    onPressed: () {
-                      if (fieldsValidated()) {
-                        appViewModel.saveProvider(
-                            context: context,
-                            scaffoldKey: scaffoldKey,
-                            hmoProvider: hmoProvider,
-                            providerName: nameController.text,
-                            providerAddress: addressController.text,
-                            providerDescription: descriptionController.text,
-                            rating: selectedRating,
-                            selectedState: selectedState,
-                            selectedActiveStatus: selectedActiveStatus,
-                            selectedProviderType: selectedProviderType);
-                      }
-                    },
-                    context: context)
-              ],
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -241,7 +265,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
         height: 14,
       );
 
-  Widget ratingWidget() {
+  Widget ratingWidget(bool editMode) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,35 +284,13 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
         EditableRating(
           key: editableRatingKey,
           rating: selectedRating,
-          canEdit: true,
+          canEdit: editMode,
           onRatingSelected: (rating) {
             setState(() {
               selectedRating = rating;
             });
           },
         )
-      ],
-    );
-  }
-
-  Widget imageWidget() {
-    if (widget.hmoProvider == null) return SizedBox();
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Images",
-          style: Theme.of(context)
-              .textTheme
-              .headline6
-              .copyWith(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        ProviderImagesPreview(hmoProvider: widget.hmoProvider)
       ],
     );
   }

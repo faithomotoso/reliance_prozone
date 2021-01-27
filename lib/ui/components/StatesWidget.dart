@@ -7,12 +7,14 @@ class StatesWidget extends StatefulWidget {
   Function onStateSelected;
   List<NState> states;
   String customHint;
+  bool canEdit;
 
   StatesWidget(
       {@required this.selectedState,
       @required this.onStateSelected,
       @required this.states,
       this.customHint,
+        this.canEdit = true,
       Key key})
       : super(key: key);
 
@@ -28,6 +30,9 @@ class StatesWidgetState extends SearchableList<StatesWidget> {
     super.initState();
     selectedState = widget.selectedState;
   }
+
+  @override
+  bool get canEdit => widget.canEdit;
 
   @override
   List get allList => widget.states;
