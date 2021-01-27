@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Widget appBar({
   @required String title,
+  List<Widget> actions
 }) {
   return AppBar(
     title: Text(title,
@@ -9,5 +10,6 @@ Widget appBar({
       fontWeight: FontWeight.bold
     ),),
     centerTitle: true,
+    actions: actions,
   );
 }

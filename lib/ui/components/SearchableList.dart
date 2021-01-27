@@ -143,7 +143,7 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
   Widget _body() {
     return Column(
       children: [
-        SearchBar(
+        SearchableListSearchBar(
           searchController: searchController,
           onChanged: search,
         ),
@@ -189,7 +189,7 @@ abstract class SearchableList<T extends StatefulWidget> extends State<T> {
   }
 }
 
-class SearchBar extends StatelessWidget {
+class SearchableListSearchBar extends StatelessWidget {
   TextEditingController searchController;
   String hintText;
   Function onSearchButtonPressed;
@@ -197,7 +197,7 @@ class SearchBar extends StatelessWidget {
   // For uses with no search button
   Function onChanged;
 
-  SearchBar(
+  SearchableListSearchBar(
       {@required this.searchController,
       this.onSearchButtonPressed,
       this.hintText,

@@ -46,7 +46,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
   List<NState> states;
   NState selectedState;
 
-  Future providersFuture;
+  Future providerTypesFuture;
   List<HMOProviderType> providerTypes;
   HMOProviderType selectedProviderType;
 
@@ -63,7 +63,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
   }
 
   void getProviderTypes() {
-    providersFuture = Provider.of<AppViewModel>(context, listen: false)
+    providerTypesFuture = Provider.of<AppViewModel>(context, listen: false)
         .getAllProviderTypes()
         .then((value) {
       if (value is List) providerTypes = value;
@@ -73,7 +73,7 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
 
   void assignFutureWait() {
     loadLists();
-    futureWait = Future.wait([statesFuture, providersFuture]);
+    futureWait = Future.wait([statesFuture, providerTypesFuture]);
   }
 
   // Calls both functions tied to Future variables
@@ -109,7 +109,6 @@ class _AddEditHMOProviderState extends State<AddEditHMOProvider> {
       hmoProvider = appViewModel.allProviders.firstWhere(
           (element) => element.id == hmoProvider?.id,
           orElse: () => hmoProvider);
-      print("Set state called");
     });
   }
 

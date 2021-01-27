@@ -5,9 +5,10 @@ import 'package:reliance_hmo_test/ui/components/SearchableList.dart';
 class ActiveStatusWidget extends StatefulWidget {
   ActiveStatus activeStatus;
   Function onStatusSelected;
+  String customHint;
 
   ActiveStatusWidget(
-      {@required this.activeStatus, @required this.onStatusSelected, Key key})
+      {@required this.activeStatus, @required this.onStatusSelected, this.customHint, Key key})
       : super(key: key);
 
   @override
@@ -49,6 +50,14 @@ class ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
   }
 
   @override
+  void didUpdateWidget(ActiveStatusWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      selectedStatus = widget.activeStatus;
+    });
+  }
+
+  @override
   List searchFunction(String query) {
     return allList
         .where((element) => element.activeStatus
@@ -69,7 +78,7 @@ class ActiveStatusWidgetState extends SearchableList<ActiveStatusWidget> {
   }
 
   @override
-  String get textWhenNull => "Select Status";
+  String get textWhenNull => widget.customHint ?? "Select Status";
 
   @override
   String get validatorMessage => "Please select a status";

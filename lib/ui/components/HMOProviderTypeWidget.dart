@@ -6,10 +6,12 @@ class HMOProviderTypeWidget extends StatefulWidget {
   HMOProviderType selectedHmoProviderType;
   Function onProviderTypeSelected;
   List<HMOProviderType> providerTypes;
+  String customHint;
 
   HMOProviderTypeWidget({@required this.selectedHmoProviderType,
     @required this.onProviderTypeSelected,
     @required this.providerTypes,
+    this.customHint,
     Key key})
       : super(key: key);
 
@@ -25,6 +27,15 @@ class HMOProviderTypeWidgetState
   void initState() {
     super.initState();
     selectedProviderType = widget.selectedHmoProviderType;
+  }
+
+
+  @override
+  void didUpdateWidget(HMOProviderTypeWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      selectedProviderType = widget.selectedHmoProviderType;
+    });
   }
 
   @override
@@ -68,7 +79,7 @@ class HMOProviderTypeWidgetState
   }
 
   @override
-  String get textWhenNull => "Select type";
+  String get textWhenNull => widget.customHint ?? "Select type";
 
   @override
   String get validatorMessage => "Please select a type";

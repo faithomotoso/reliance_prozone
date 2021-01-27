@@ -16,8 +16,22 @@ class AppApi {
       contentType: "application/json",
       headers: {"Authorization": "Bearer ${AuthToken.token}"}));
 
-  static Future getAllProviders() {
-    return _dio.get("/providers");
+  static Future getAllProviders(
+      {@required String nameSearchParam,
+      String typeFilterId,
+      String statusFilter}) {
+    Map<String, dynamic> queryParameters = {};
+
+    if (nameSearchParam.isNotEmpty)
+      queryParameters["name_contains"] = nameSearchParam;
+
+    if (typeFilterId != null)
+      queryParameters["provider_type.id"] = typeFilterId;
+
+    if (statusFilter != null)
+      queryParameters["active_status_contains"] = statusFilter;
+
+    return _dio.get("/providers?_sort=id", queryParameters: queryParameters);
   }
 
   static Future getAllStates() {
@@ -93,9 +107,8 @@ class AppApi {
       "ref": "provider",
       "refId": providerId,
       "field": "images",
-    })..files.addAll(
-      files.map((e) => MapEntry("files", e)).toList()
-    );
+    })
+      ..files.addAll(files.map((e) => MapEntry("files", e)).toList());
 
     return _dio.post("/upload", data: formData);
   }

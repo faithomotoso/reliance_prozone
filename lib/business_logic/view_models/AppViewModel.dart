@@ -18,9 +18,15 @@ class AppViewModel extends ChangeNotifier {
   bool loadOnPop = false;
   List<HMOProvider> allProviders;
 
-  Future getAllProviders() async {
+  Future getAllProviders(
+      {String nameSearchParam,
+      HMOProviderType typeFilter,
+      ActiveStatus statusFilter}) async {
     try {
-      Response response = await AppApi.getAllProviders();
+      Response response = await AppApi.getAllProviders(
+          nameSearchParam: nameSearchParam,
+          typeFilterId: typeFilter?.id,
+          statusFilter: statusFilter?.activeStatus);
       List data = response.data;
       allProviders =
           List<HMOProvider>.from(data.map((e) => HMOProvider.fromJson(e)));
