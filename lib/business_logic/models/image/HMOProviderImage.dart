@@ -12,7 +12,6 @@ class HMOProviderImage {
 
   String get name => _name;
 
-  // todo remove unused url
   String get url => _url;
 
   String get thumbnailUrl {

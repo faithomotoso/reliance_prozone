@@ -4,7 +4,7 @@ import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider
 import 'package:reliance_hmo_test/ui/hmo_providers/add_edit_hmo_provider.dart';
 import 'package:reliance_hmo_test/utils/utils.dart';
 
-import '../EditableRating.dart';
+import 'EditableRating.dart';
 
 class HMOProviderTile extends StatelessWidget {
   final HMOProvider hmoProvider;

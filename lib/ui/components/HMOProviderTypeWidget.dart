@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
+import 'file:///C:/Users/user/AndroidStudioProjects/reliance_hmo_test/lib/business_logic/HMOProviderType.dart';
 import 'package:reliance_hmo_test/ui/components/SearchableList.dart';
 
 class HMOProviderTypeWidget extends StatefulWidget {

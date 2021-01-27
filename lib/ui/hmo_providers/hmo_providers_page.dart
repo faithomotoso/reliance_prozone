@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
-import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
+import 'file:///C:/Users/user/AndroidStudioProjects/reliance_hmo_test/lib/business_logic/HMOProviderType.dart';
 import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
 import 'package:reliance_hmo_test/business_logic/view_models/AppViewModel.dart';
 import 'package:reliance_hmo_test/ui/components/AppBar.dart';

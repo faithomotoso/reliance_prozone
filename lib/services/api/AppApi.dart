@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
-import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
+import 'file:///C:/Users/user/AndroidStudioProjects/reliance_hmo_test/lib/business_logic/HMOProviderType.dart';
 import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
 import 'package:reliance_hmo_test/services/api/AuthToken.dart';
 

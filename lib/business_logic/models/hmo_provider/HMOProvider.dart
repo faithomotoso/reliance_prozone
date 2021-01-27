@@ -1,6 +1,6 @@
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderImage.dart';
-import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
+import 'file:///C:/Users/user/AndroidStudioProjects/reliance_hmo_test/lib/business_logic/HMOProviderType.dart';
 import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
 
 class HMOProvider {
