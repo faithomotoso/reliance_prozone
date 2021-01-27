@@ -6,11 +6,13 @@ class StatesWidget extends StatefulWidget {
   NState selectedState;
   Function onStateSelected;
   List<NState> states;
+  String customHint;
 
   StatesWidget(
       {@required this.selectedState,
       @required this.onStateSelected,
       @required this.states,
+      this.customHint,
       Key key})
       : super(key: key);
 
@@ -32,6 +34,14 @@ class StatesWidgetState extends SearchableList<StatesWidget> {
 
   @override
   String get headerText => "State";
+
+  @override
+  void didUpdateWidget(StatesWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      selectedState = widget.selectedState;
+    });
+  }
 
   @override
   Widget itemWidgetToDisplay(item) {
@@ -62,12 +72,13 @@ class StatesWidgetState extends SearchableList<StatesWidget> {
   String get selectedValue {
     List<NState> allStates = allList;
     return allStates
-            .firstWhere((element) => element.id == selectedState?.id,
-                orElse: () => null)?.name;
+        .firstWhere((element) => element.id == selectedState?.id,
+            orElse: () => null)
+        ?.name;
   }
 
   @override
-  String get textWhenNull => "Select State";
+  String get textWhenNull => widget.customHint ?? "Select State";
 
   @override
   String get validatorMessage => "Please select a state";

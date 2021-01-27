@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reliance_hmo_test/business_logic/models/ActiveStatus.dart';
 import 'package:reliance_hmo_test/business_logic/models/hmo_provider/HMOProvider.dart';
 import 'package:reliance_hmo_test/business_logic/models/image/HMOProviderType.dart';
+import 'package:reliance_hmo_test/business_logic/models/state/NState.dart';
 import 'package:reliance_hmo_test/business_logic/view_models/AppViewModel.dart';
 import 'package:reliance_hmo_test/ui/components/AppBar.dart';
 import 'package:reliance_hmo_test/ui/components/AppFutureBuilder.dart';
@@ -26,6 +27,7 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
 
   HMOProviderType providerTypeFilter;
   ActiveStatus activeStatusFilter;
+  NState stateFilter;
 
   void getProviders() {
     showFab.value = false;
@@ -33,7 +35,8 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
         .getAllProviders(
             nameSearchParam: nameSearchParam,
             statusFilter: activeStatusFilter,
-            typeFilter: providerTypeFilter)
+            typeFilter: providerTypeFilter,
+            stateFilter: stateFilter)
         .then((value) {
       showFab.value = true;
       return value;
@@ -157,11 +160,14 @@ class _HMOProvidersPageState extends State<HMOProvidersPage> {
   }
 
   Widget filterWidget() {
-    return ProvidersFilterWidget(onApplyFilter: (filterType, filterStatus) {
+    return ProvidersFilterWidget(
+        onApplyFilter: (typeFilter, statusFilter, stateFilter) {
       Navigator.pop(context);
+      // Apply filter and fetch list
       setState(() {
-        providerTypeFilter = filterType;
-        activeStatusFilter = filterStatus;
+        providerTypeFilter = typeFilter;
+        activeStatusFilter = statusFilter;
+        this.stateFilter = stateFilter;
         getProviders();
       });
     });

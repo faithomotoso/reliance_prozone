@@ -25,6 +25,7 @@ class ProvidersFilterWidget extends StatefulWidget {
 class _ProvidersFilterWidgetState extends State<ProvidersFilterWidget> {
   HMOProviderType typeFilter;
   ActiveStatus statusFilter;
+  NState stateFilter;
   TextEditingController locationController = TextEditingController();
 
   // For location
@@ -158,16 +159,19 @@ class _ProvidersFilterWidgetState extends State<ProvidersFilterWidget> {
                                           statusFilter = status;
                                         });
                                       }),
-
-                                  // StatesWidget(
-                                  //   selectedState: statusFilter,
-                                  //   onStateSelected: (state) {
-                                  //     setState(() {
-                                  //       selectedState = state;
-                                  //     });
-                                  //   },
-                                  //   states: states,
-                                  // ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  StatesWidget(
+                                    selectedState: stateFilter,
+                                    customHint: "filter by State",
+                                    onStateSelected: (state) {
+                                      stState(() {
+                                        stateFilter = state;
+                                      });
+                                    },
+                                    states: states,
+                                  ),
                                 ],
                               ),
                             ),
@@ -179,8 +183,8 @@ class _ProvidersFilterWidgetState extends State<ProvidersFilterWidget> {
                             child: AppButton(
                                 buttonText: "Apply Filter",
                                 onPressed: () {
-                                  widget.onApplyFilter
-                                      ?.call(typeFilter, statusFilter);
+                                  widget.onApplyFilter?.call(
+                                      typeFilter, statusFilter, stateFilter);
                                 },
                                 context: context),
                           )
@@ -198,9 +202,10 @@ class _ProvidersFilterWidgetState extends State<ProvidersFilterWidget> {
   void clearFilter() {
     typeFilter = null;
     statusFilter = null;
-    widget.onApplyFilter?.call(typeFilter, statusFilter);
+    stateFilter = null;
+    widget.onApplyFilter?.call(typeFilter, statusFilter, stateFilter);
   }
 }
 
-typedef FilterParamsCallback(
-    HMOProviderType providerTypeFilter, ActiveStatus activeStatusFilter);
+typedef FilterParamsCallback(HMOProviderType providerTypeFilter,
+    ActiveStatus activeStatusFilter, NState stateFilter);

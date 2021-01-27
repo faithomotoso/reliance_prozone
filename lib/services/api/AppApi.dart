@@ -19,7 +19,8 @@ class AppApi {
   static Future getAllProviders(
       {@required String nameSearchParam,
       String typeFilterId,
-      String statusFilter}) {
+      String statusFilter,
+      String stateFilterId}) {
     Map<String, dynamic> queryParameters = {};
 
     if (nameSearchParam.isNotEmpty)
@@ -30,6 +31,9 @@ class AppApi {
 
     if (statusFilter != null)
       queryParameters["active_status_contains"] = statusFilter;
+
+    if (stateFilterId != null)
+      queryParameters["state.id"] = stateFilterId;
 
     return _dio.get("/providers?_sort=id", queryParameters: queryParameters);
   }
