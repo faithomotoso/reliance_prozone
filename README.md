@@ -1,16 +1,30 @@
-# reliance_hmo_test
+# reliance_prozone
 
-A new Flutter project.
+ProZone is a provider aggregator company, that has a large network of healthcare providers (Gym, Spas, Optical Centres, Hospitals etc.) that they work with.
+
+They have provider officers that are responsible for signing up and managing these providers.
+
 
 ## Getting Started
+Download dependencies with:
+```
+flutter pub get
+```
+And build the app with:
+```
+flutter run
+```
 
-This project is a starting point for a Flutter application.
+| table | table1 |
 
-A few resources to get you started if this is your first Flutter project:
+| table | table1 |
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+| table | table1 |
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Screenshots
+
+|   ![Screenshot](screenshots/dashboard.png)    |  ![Screenshot](screenshots/providers_list.png)    |
+|   ![Screenshot](screenshots/filter.png)   |   ![Screenshot](screenshots/add_provider.png) |
+|   ![Screenshot](screenshots/view_provider.png)    |   ![Screenshot](screenshots/provider_images.png)  |
+|   ![Screenshot](screenshots/images_upload.png)    |
