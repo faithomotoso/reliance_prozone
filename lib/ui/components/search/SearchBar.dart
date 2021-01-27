@@ -26,9 +26,6 @@ class _SearchBarState extends State<SearchBar> {
             child: TextField(
               controller: searchController,
               decoration: textFieldDecoration(widget.hint ??  "Search"),
-              onEditingComplete: () {
-                print("Editing complete");
-              },
             ),
           ),
           SizedBox(width: 10,),
