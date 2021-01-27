@@ -15,12 +15,6 @@ And build the app with:
 flutter run
 ```
 
-| table | table1 |
-
-| table | table1 |
-
-| table | table1 |
-
 
 ## Screenshots
 
